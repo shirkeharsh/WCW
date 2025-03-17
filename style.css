@@ -1,0 +1,70 @@
+/* Basic reset and font style */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Main terminal container */
+#terminal {
+    border: 2px solid white;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    height: 70%;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+/* Terminal text output area */
+#terminal-output {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 18px;
+    line-height: 1.5;
+    color: white;
+    overflow-y: auto;
+    max-height: calc(100% - 35px);
+    transition: opacity 0.3s ease;
+}
+
+/* Input field */
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    font-size: 18px;
+    outline: none;
+    caret-color: white;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    opacity: 0; /* Keep the input hidden */
+    pointer-events: none; /* Make sure it's still accessible */
+}
+
+/* Cursor effect */
+#cursor {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    font-size: 18px;
+    color: white;
+    animation: blink 1s step-end infinite;
+}

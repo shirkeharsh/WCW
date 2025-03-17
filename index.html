@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRS</title>
+    <style>
+        /* General Body Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: monospace;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Use full viewport height */
+        }
+
+        /* Insect (Math equation) style */
+        .insect {
+            position: absolute;
+            font-size: 20px;
+            color: green;
+            animation: moveInsect 5s linear infinite;
+            pointer-events: none; /* Prevent interactions with the terminal */
+        }
+
+        .insect:nth-child(odd) {
+            color: red; /* Alternate color for odd insects */
+        }
+
+        .terminal {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #00ff00;
+            height: 400px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 10; /* Ensure terminal content is on top */
+            flex-grow: 1; /* Allow the terminal to take up available space */
+        }
+
+        .terminal-output {
+            white-space: pre-wrap;
+        }
+
+        .terminal-input {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .terminal-input span {
+            color: #00ff00;
+        }
+
+        input {
+            flex: 1;
+            background: black;
+            border: none;
+            color: white;
+            outline: none;
+            font-family: monospace;
+            font-size: 16px;
+            caret-color: #00ff00;
+        }
+
+        .red { color: red; }
+        .blue { color: blue; }
+
+        .links {
+            margin-top: 20px;
+        }
+
+        .link {
+            display: block;
+            color: #00ff00;
+            text-decoration: none;
+            margin: 5px 0;
+            transition: color 0.3s;
+        }
+
+        .link:hover {
+            color: #ffffff;
+        }
+
+        /* Footer Style */
+        footer {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            color: #33FF00;
+            font-size: 18px;
+            background-color: black;
+            border-top: 2px solid #33FF00;
+            animation: blinkFooter 1.5s infinite;
+        }
+
+        @keyframes blinkFooter {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes moveInsect {
+            0% { top: 100%; left: 0%; }
+            100% { top: -20%; left: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Terminal Box -->
+    <div class="terminal">
+        <div class="terminal-output" id="output">
+            <span id="welcome-message">Initializing ...</span>
+        </div>
+        <div class="terminal-input">
+            <span>&gt;&nbsp;</span>
+            <input type="text" id="commandInput" placeholder="Type a command...">
+        </div>
+        <div class="links" id="links" style="display: none;">
+            <a href="https://github.com/shirkeharsh" target="_blank" class="link">GitHub.</a>
+            <a href="https://wa.me/919022768308" target="_blank" class="link">WhatsApp.</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 HRS. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const outputDiv = document.getElementById('output');
+        const input = document.getElementById('commandInput');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const linksDiv = document.getElementById('links');
+
+        // List of messages to display
+        const messages = [
+            "[INFO] Name: Harsh Rajesh Shirke",
+            "[INFO] Qualityfication: PG in MCA",
+            "[INFO] Downloading database logs...",
+            "[INFO] Spoofing IP address...",
+            "[INFO] Type: Contact to share details :)",
+        ];
+
+        let messageIndex = 0;
+
+        // Function to simulate typing animation with alternating colors
+        function typeMessage(message, colorClass, callback) {
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i === 0) {
+                    outputDiv.innerHTML += `<span class="${colorClass}">`;
+                }
+                outputDiv.innerHTML += message[i];
+                i++;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+                if (i === message.length) {
+                    outputDiv.innerHTML += "</span>\n";
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
+            }, 20); // Typing speed (20ms per character)
+        }
+
+        // Function to display all messages sequentially
+        function displayMessages() {
+            if (messageIndex < messages.length) {
+                const colorClass = messageIndex % 2 === 0 ? 'red' : 'blue'; // Alternate between red and blue
+                typeMessage(`\n> ${messages[messageIndex]}`, colorClass, () => {
+                    messageIndex++;
+                    displayMessages(); // Call recursively to display the next message
+                });
+            } else {
+                showLinks(); // Display links after all messages
+            }
+        }
+
+        // Function to display clickable links
+        function showLinks() {
+            setTimeout(() => {
+                linksDiv.style.display = 'block';
+                typeMessage("\n> Links available:", "blue", () => {});
+            }, 500); // Slight delay before showing links
+        }
+
+        // Initialize the terminal and start displaying messages
+        function initializeTerminal() {
+            typeMessage("\n> Welcome to weird portfolio", "red", () => {
+                setTimeout(displayMessages, 500); // Start after a short delay
+            });
+        }
+
+        // Process command (case-insensitive)
+        function processCommand(command) {
+            const lowerCaseCommand = command.toLowerCase();
+            if (lowerCaseCommand === 'contact') {
+                window.location.href = 'contact.php';
+            } else {
+                typeMessage(`\n> ${command}`, "white");
+            }
+        }
+
+        // Handle user input
+        input.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                processCommand(input.value.trim());
+                input.value = '';
+            }
+        });
+
+        // Start the animation on page load
+        window.onload = () => {
+            welcomeMessage.remove();
+            initializeTerminal();
+        };
+    </script>
+</body>
+</html>
